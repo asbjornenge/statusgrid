@@ -1,0 +1,32 @@
+$red   = #C44D58
+$green = #C7F464
+$blue  = #4ECDC4
+$grey  = #556270
+
+body
+    border 0
+    margin 0
+
+.Header
+    height 50px
+    text-align center
+    line-height 50px
+    font-size 1.2em
+    color $grey 
+    border-bottom 1px solid $grey 
+
+.GridView
+    display flex
+
+    .StatusItem
+        width 20px
+        height 20px
+        margin 1px
+        background-color #ccc
+
+        &.unknown
+            background-color $grey 
+        &.good
+            background-color $green
+        &.bad
+            background-color $red
