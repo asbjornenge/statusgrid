@@ -1,0 +1,50 @@
+{
+  "name": "statusgrid",
+  "private": true,
+  "version": "1.0.0",
+  "description": "TagHub Application",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrent -k -p command 'npm run start-copy' 'npm run start-watch-js' 'npm run start-watch-style' 'npm run start-server' 'npm run start-livereload'",
+    "start-copy": "cp app/index.html build/index.html",
+    "start-watch-js": "watchify -d -e app/app.js -t babelify -t [ resolvify app ] -t imgurify -t [stylusify --inline-images] -o build/app.js",
+    "start-watch-style": "stylus -w app/app.styl -o build",
+    "start-server": "static build --port 8555",
+    "start-livereload": "livereloadify build --glob '**/**'",
+    "test": "mocha --compilers js:babel/register,styl:mocha-stylus-compiler -R nyan -w --check-leaks",
+    "build": "concurrent -p command 'npm run build-js' 'npm run build-style'",
+    "build-js": "browserify app/app.js -t babelify -t [ resolvify app ] -t imgurify -t [stylusify --inline-images] -o build/app.js",
+    "build-style": "stylus app/app.styl -o build",
+    "bundle": "npm run bundle-copy & npm run bundle-js & npm run bundle-style",
+    "bundle-js": "uglifyjs --compress --screw-ie8 build/app.js -o dist/app.js",
+    "bundle-style": "cssnano build/app.css dist/app.css",
+    "bundle-copy": "cp app/index.html dist/index.html"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^0.13.1"
+  },
+  "devDependencies": {
+    "babel": "^5.0.12",
+    "babelify": "^5.0.4",
+    "browserify": "^9.0.3",
+    "concurrently": "0.0.5",
+    "cssnano": "^1.0.1",
+    "imgurify": "^1.1.0",
+    "livereloadify": "^2.0.0",
+    "mocha": "^2.2.4",
+    "mocha-imguri-compiler": "^1.1.1",
+    "mocha-stylus-compiler": "^1.0.1",
+    "resolvify": "^1.0.2",
+    "stylus": "^0.50.0",
+    "stylusify": "^2.0.0",
+    "testdom": "^1.0.1",
+    "uglifyjs": "^2.4.10",
+    "watchify": "^3.1.1"
+  }
+}
