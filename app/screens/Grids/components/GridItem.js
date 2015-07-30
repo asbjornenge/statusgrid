@@ -13,12 +13,15 @@ let GridItemForm = t.struct({
 export default class GridItem extends React.Component {
     render() {
         let value = this.props.grid ? this.props.grid.get('meta').toJS() : {}
+        let middleButton = this.props.grid ?
+            <button onClick={this.onEdit.bind(this)}>Edit Items</button> :
+            <button onClick={this.onCancel.bind(this)}>Cancel</button>
         return (
             <div className="GridItem">
                 <Form ref="form" type={GridItemForm} value={value} />
                 <div className="buttons">
                     <button onClick={this.onSave.bind(this)}>Save</button>
-                    <button onClick={this.onCancel.bind(this)}>Cancel</button>
+                    {middleButton}
                     <button onClick={this.onRemove.bind(this)}>Remove</button>
                 </div>
             </div>
@@ -37,5 +40,8 @@ export default class GridItem extends React.Component {
     onRemove() {
         if (!this.props.grid) return this.props.onAddCancel()
         this.props.flux.getActions('grid').remove(this.props.grid)
+    }
+    onEdit() {
+        this.props.flux.getUtils('nav').navigate('/grid/'+this.props.grid.get('meta').get('id'))
     }
 }
