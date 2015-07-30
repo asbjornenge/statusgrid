@@ -3,6 +3,7 @@ import Immutable from 'immutable'
 
 let testGrid = {
     meta : {
+        name : 'testgrid',
         url : '',
         secret : ''
     },
