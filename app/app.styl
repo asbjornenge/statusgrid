@@ -19,18 +19,58 @@ body
         float right
         display flex
 
-.GridView
-    display flex
+.GridScreen
+    .GridView
+        display flex
 
-    .StatusItem
-        width 20px
-        height 20px
-        margin 1px
-        background-color #ccc
+        .StatusItem
+            width 20px
+            height 20px
+            margin 1px
+            background-color #ccc
 
-        &.unknown
-            background-color $grey 
-        &.good
-            background-color $green
-        &.bad
-            background-color $red
+            &.unknown
+                background-color $grey 
+            &.good
+                background-color $green
+            &.bad
+                background-color $red
+
+.GridsScreen
+
+    .addButton
+        height 26px
+        button
+            margin 5px
+            float right
+
+    .GridsList
+
+        .GridItem
+            margin 5px
+            border 1px solid $grey
+            display flex
+            flex-direction row 
+
+            .form-group-depth-0
+                flex auto
+
+            .form-group.has-error
+                input
+                    border 2px solid $red
+
+            .buttons
+                with 100px
+                margin-top 60px
+                margin-right 5px
+
+            fieldset
+                border 0
+
+                .form-group
+                    margin 2px
+
+                label
+                    display inline-block
+                    width 50px
+

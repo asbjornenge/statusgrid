@@ -21,7 +21,6 @@ class HeaderMenu extends React.Component {
         )
     }
     navigate(path) {
-        console.log(this.props)
         this.props.flux.getUtils('nav').navigate('/'+path)
     }
 }
