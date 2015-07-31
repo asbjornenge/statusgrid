@@ -16,11 +16,22 @@ let GridItemForm = t.struct({
     unit   : Units 
 })
 
-export default class GridItem extends React.Component {
+export default class GridItemFlux extends React.Component {
+    render() {
+        return (
+            <FluxComponent>
+                <GridItem {...this.props} />
+            </FluxComponent>
+        )
+    }
+}
+
+class GridItem extends React.Component {
     render() {
         let value = this.props.item ? this.props.item.toJS() : {}
-        let middleButton = !this.props.item ?
-            <button onClick={this.onCancel.bind(this)}>Cancel</button> : undefined
+        let middleButton = this.props.item ?
+            <button onClick={this.onView.bind(this)}>View</button> : 
+            <button onClick={this.onCancel.bind(this)}>Cancel</button>
         let id = this.props.item ? this.props.item.get('id') : 'new'
         return (
             <div className="GridItem">
@@ -38,17 +49,18 @@ export default class GridItem extends React.Component {
         let values = this.refs.form.getValue()
         if (!values) return
         this.props.onAddCancel()
-//        if (!this.props.grid) return this.props.flux.getActions('grid').add(values)
-//        this.props.flux.getActions('grid').update(this.props.grid.get('meta').merge(values))
+        if (!this.props.grid) return this.props.flux.getActions('grid').addItem(values)
+        this.props.flux.getActions('grid').updateItem(this.props.grid.get('meta').merge(values))
     }
     onCancel() {
         if (!this.props.grid) return this.props.onAddCancel()
     }
     onRemove() {
         if (!this.props.grid) return this.props.onAddCancel()
-//        this.props.flux.getActions('grid').remove(this.props.grid)
+        this.props.flux.getActions('grid').removeItem(this.props.grid)
     }
-    onEdit() {
+    onView() {
+        console.log('me wanna view dis item')
 //        this.props.flux.getUtils('nav').navigate('/grid/'+this.props.grid.get('meta').get('id'))
     }
 }
