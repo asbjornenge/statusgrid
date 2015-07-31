@@ -11,8 +11,26 @@ let routes = {
     '/grid/:id' : require('./screens/GridItems') 
 }
 
-React.render(
-    <FluxComponent flux={flux}>
-        <Router routes={routes} />
-    </FluxComponent>
-, document.body)
+var FireStarter = function(target) {
+    target.childContextTypes = {
+      environment: React.PropTypes.string
+    }
+    target.prototype.getChildContext = function() {
+        return {
+            environment: "grandma's house"
+        }
+    }
+}
+
+// import FireStarter from 'fireflux'
+
+@FireStarter
+class App extends React.Component {
+    render() {
+        return (
+            <Router routes={routes} />
+        ) 
+    }
+}
+
+React.render(<App />, document.body)

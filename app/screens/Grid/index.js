@@ -1,25 +1,32 @@
 import React         from 'react'
 import FluxComponent from 'flummox/component'
 import Header        from 'shared/components/Header'
-import GridView      from './components/GridView'
 
-export default class GridFlux extends React.Component {
-    render() {
-        return (
-            <FluxComponent connectToStores={['grid']}>
-                <Grid />
-            </FluxComponent>
-        )
+var FireState = function(query) {
+    return function decorator(target) {
+        target.contextTypes = {
+            environment: React.PropTypes.string
+        }
+        target.prototype.componentDidMount = function() {
+            console.log('Im mounted', this.context)
+        }
+        target.prototype.componentWillUnmount = function() {
+            console.log('Im unmounted')
+        }
     }
 }
 
-class Grid extends React.Component {
+@FireProps({ items : '/items' })
+export default class Grid extends React.Component {
     render() {
         return (
             <div className="GridScreen">
-                <Header />
-                <GridView {...this.props} />
+                <div>This is the grid screen</div>
+                <button>Add</button>
             </div>
         )
+    }
+    doThing() {
+        this.ref.child('/items/abc').set({})
     }
 }

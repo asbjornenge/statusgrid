@@ -7,7 +7,7 @@
   "scripts": {
     "start": "concurrent -k -p command 'npm run start-copy' 'npm run start-watch-js' 'npm run start-watch-style' 'npm run start-server' 'npm run start-livereload'",
     "start-copy": "cp app/index.html build/index.html",
-    "start-watch-js": "watchify -d -e app/app.js -t babelify -t [ resolvify app ] -t imgurify -t [stylusify --inline-images] -o build/app.js",
+    "start-watch-js": "watchify -d -e app/app.js -t [ babelify --stage 0 ] -t [ resolvify app ] -t imgurify -t [stylusify --inline-images] -o build/app.js",
     "start-watch-style": "stylus -w app/app.styl -o build",
     "start-server": "static build --port 8555",
     "start-livereload": "livereloadify build --glob '**/**'",
@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "babel": "^5.0.12",
-    "babelify": "^5.0.4",
+    "babelify": "^6.1.3",
     "browserify": "^9.0.3",
     "concurrently": "0.0.5",
     "cssnano": "^1.0.1",
