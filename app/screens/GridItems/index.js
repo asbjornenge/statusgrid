@@ -34,6 +34,7 @@ class GridItemsScreen extends React.Component {
                 </div>
                 <GridItems 
                     grid={grid} 
+                    gridId={this.props.grid} 
                     adding={this.state.adding} 
                     onAddCancel={this.onAddCancel.bind(this)} />
             </div>

@@ -12,12 +12,14 @@ export default class GridItems extends React.Component {
                         key={index}
                         flux={this.props.flux}
                         item={item}
+                        gridId={this.props.gridId}
                         onAddCancel={this.props.onAddCancel}/>
         })
         if (this.props.adding) griditems = griditems.unshift(
             <GridItem 
                 key="adding"
                 flux={this.props.flux}
+                gridId={this.props.gridId}
                 onAddCancel={this.props.onAddCancel}/>
         )
         return (

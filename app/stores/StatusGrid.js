@@ -2,6 +2,7 @@ import { Store } from 'flummox'
 import Immutable from 'immutable'
 import assign    from 'object.assign'
 import uuid      from 'node-uuid'
+import firebase  from 'firebase/lib/firebase-web'
 
 let testGrid = {
     meta : {
@@ -48,6 +49,9 @@ export default class StatusGrid extends Store {
         this.register(statusGridActions.add, this.onAdd)
         this.register(statusGridActions.update, this.onUpdate)
         this.register(statusGridActions.remove, this.onRemove)
+        this.register(statusGridActions.addItem, this.onAddItem)
+//        this.register(statusGridActions.update, this.onUpdate)
+//        this.register(statusGridActions.remove, this.onRemove)
 
         /* Read localStorage */
         let grids = [testGrid]
@@ -56,9 +60,17 @@ export default class StatusGrid extends Store {
             grids = lgrids.map((grid) => { return { meta : grid } }) 
         }
 
+        /* Set the state */
+        let igrids = Immutable.fromJS(grids)
         this.state = {
-            grids : Immutable.fromJS(grids) 
+            grids : igrids 
         }
+
+        /* Connect to grids */
+        this.connections = {}
+        igrids.forEach((grid) => {
+            this.connect(grid)
+        })
     }
     onAdd(values) {
         let newGrid  = Immutable.Map({ meta : Immutable.Map(assign({ id: uuid.v1() },values)) })
@@ -85,10 +97,34 @@ export default class StatusGrid extends Store {
         this.serialize(newGrids)
         this.setState({ grids : newGrids })
     }
+    onAddItem(item) {
+        let conn = this.connections[item.gridId] 
+        let id  = uuid.v1()
+        conn.child(id).set(assign({ id : id }, item.values))
+    }
     serialize(grids) {
         let onlyMeta = grids.toJS().map((grid) => {
             return grid.meta
         })
         localStorage.setItem('statusgrid-grids', JSON.stringify(onlyMeta))
+    }
+    connect(grid) {
+        let meta = grid.get('meta').toJS()
+        let conn = new Firebase(meta.url)
+        this.connections[meta.id] = conn 
+        this.connections[meta.id].authWithCustomToken(meta.secret, (err, authData) => {
+            if (err) throw err
+            this.setupItemListener(grid)
+        }) 
+    }
+    setupItemListener(grid) {
+        // Listen for new Items
+        let meta = grid.get('meta').toJS()
+        this.connections[meta.id].on('child_added', (snap) => {
+            console.log('child added', snap.val())
+        })
+    }
+    setupEventListeners() {
+        // LIsten for new Events
     }
 }

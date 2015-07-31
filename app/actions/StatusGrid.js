@@ -11,5 +11,11 @@ export default class StatusGridActions extends Actions {
     remove(grid) {
         return grid
     }
+    addItem(gridId, values) {
+        return {
+            gridId : gridId,
+            values : values
+        }
+    }
 
 }

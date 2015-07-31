@@ -49,7 +49,7 @@ class GridItem extends React.Component {
         let values = this.refs.form.getValue()
         if (!values) return
         this.props.onAddCancel()
-        if (!this.props.grid) return this.props.flux.getActions('grid').addItem(values)
+        if (!this.props.grid) return this.props.flux.getActions('grid').addItem(this.props.gridId, values)
         this.props.flux.getActions('grid').updateItem(this.props.grid.get('meta').merge(values))
     }
     onCancel() {
