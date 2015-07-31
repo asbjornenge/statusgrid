@@ -3,6 +3,29 @@ $green = #C7F464
 $blue  = #4ECDC4
 $grey  = #556270
 
+$formbox()
+    .form-group-depth-0
+        flex auto
+
+    .form-group.has-error
+        input
+            border 2px solid $red
+
+    .buttons
+        with 100px
+        margin-top 60px
+        margin-right 5px
+
+    fieldset
+        border 0
+
+        .form-group
+            margin 2px
+
+        label
+            display inline-block
+            width 50px
+
 body
     border 0
     margin 0
@@ -51,26 +74,26 @@ body
             border 1px solid $grey
             display flex
             flex-direction row 
+            $formbox()
 
-            .form-group-depth-0
-                flex auto
+.GridItemsScreen
 
-            .form-group.has-error
-                input
-                    border 2px solid $red
+    .addButton
+        height 26px
+        button
+            margin 5px
+            float right
 
-            .buttons
-                with 100px
-                margin-top 60px
-                margin-right 5px
+    .GridItems
 
-            fieldset
-                border 0
+        .GridItem
+            margin 5px
+            border 1px solid $grey
+            display flex
+            flex-direction row
+            $formbox()
 
-                .form-group
-                    margin 2px
-
-                label
-                    display inline-block
-                    width 50px
+            .GridItemId
+                position absolute
+                right 10px
 

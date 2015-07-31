@@ -6,8 +6,9 @@ import Flux          from './flux'
 let flux = new Flux()
 
 let routes = {
-    '/'      : require('./screens/Grid'),
-    '/grids' : require('./screens/Grids') 
+    '/'         : require('./screens/Grid'),
+    '/grids'    : require('./screens/Grids'), 
+    '/grid/:id' : require('./screens/GridItems') 
 }
 
 React.render(

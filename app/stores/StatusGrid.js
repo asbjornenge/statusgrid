@@ -13,6 +13,8 @@ let testGrid = {
     items : [
         {
             meta    : {
+                id   : uuid.v1(),
+                name : 'Some thing I monitor',
                 diff : 2,
                 unit : 'minute' 
             },
