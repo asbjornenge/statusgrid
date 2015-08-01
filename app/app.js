@@ -1,9 +1,6 @@
-import React         from 'react'
-import Router        from 'tiny-react-router'
-import FluxComponent from 'flummox/component'
-import Flux          from './flux'
-
-let flux = new Flux()
+import React           from 'react'
+import Router          from 'tiny-react-router'
+import { FireStarter } from 'fireflux' 
 
 let routes = {
     '/'         : require('./screens/Grid'),
@@ -11,20 +8,7 @@ let routes = {
     '/grid/:id' : require('./screens/GridItems') 
 }
 
-var FireStarter = function(target) {
-    target.childContextTypes = {
-      environment: React.PropTypes.string
-    }
-    target.prototype.getChildContext = function() {
-        return {
-            environment: "grandma's house"
-        }
-    }
-}
-
-// import FireStarter from 'fireflux'
-
-@FireStarter
+@FireStarter('https://taghub-statusgrid.firebaseio.com/')
 class App extends React.Component {
     render() {
         return (

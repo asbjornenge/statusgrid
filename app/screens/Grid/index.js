@@ -1,20 +1,7 @@
 import React         from 'react'
 import FluxComponent from 'flummox/component'
 import Header        from 'shared/components/Header'
-
-var FireState = function(query) {
-    return function decorator(target) {
-        target.contextTypes = {
-            environment: React.PropTypes.string
-        }
-        target.prototype.componentDidMount = function() {
-            console.log('Im mounted', this.context)
-        }
-        target.prototype.componentWillUnmount = function() {
-            console.log('Im unmounted')
-        }
-    }
-}
+import { FireProps } from 'fireflux'
 
 @FireProps({ items : '/items' })
 export default class Grid extends React.Component {
