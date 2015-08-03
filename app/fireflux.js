@@ -1,65 +1,73 @@
 import React from 'react'
+import Immutable from 'immutable'
 import assign from 'object.assign'
+import uuid from 'node-uuid'
 import Firebase from 'firebase/lib/firebase-web'
 
-let listeners = {}
+let fireStore = {}
 
-function distributor(pathListeners, snap) {
-    let data = assign({ fid : snap.key() }, snap.val())
-    pathListeners.data.push(data)
-    pathListeners.fns.forEach((fn) => fn(data))
+function getChildPath(ref, path) {
+    if (path.length == 0) return ref
+    let _path = path.pop()
+    return getChildPath(ref.child(_path), path)
 }
 
-function addListener(path, fn, ref) {
-    // TODO: Match also ref somehow
-    if (listeners.path) {
-        // Replay all events
-        listeners.data.forEach((d) => fn(d))
-        // Hook up the listener
-        listeners.fns.push(fn)
-    } else {
-        listeners[path] = {
-            data   : [],
-            fns    : [fn],
+function pushState(comp, state) {
+    let s = {}
+    s[comp.prop] = state
+    comp.comp.setState(s)
+}
+
+function addComponent(comp, queries) {
+    queries.forEach((q) => {
+        let _comp = {
+            comp : comp,
+            prop : q.prop
         }
-        listeners[path].dist = distributor.bind(undefined, listeners[path])
-        ref.child(path).on('child_added', listeners[path].dist)
-    } 
+        if (!fireStore[q.path]) {
+            fireStore[q.path] = {
+                components : [_comp]
+            }
+            // add listeners
+            let child = getChildPath(comp.ref, q.path.split('/').slice(1))
+            fireStore[q.path].handler = function(snap) {
+                fireStore[q.path].state = snap.val()
+                fireStore[q.path].components.forEach((c) => pushState(c, snap.val()))
+            }
+            child.on('value', fireStore[q.path].handler)
+        } else {
+            fireStore[q.path].components.push(_comp)
+            if (fireStore[q.path].state) pushState(_comp, fireStore[q.path].state)
+        }
+    })
 }
-function removeListener(path, fn) {}
+
+function delComponent(comp) {
+    Object.keys(fireStore).forEach((fpath) => {
+        let _fireStore = fireStore[fpath]
+        _fireStore.components = _fireStore.components.filter((c) => {
+            return c.comp != comp
+        })
+    })
+}
 
 export function FireProps(query) { 
     return (target) => {
+        let queries = Object.keys(query).map((prop) => { 
+            return { prop : prop, path : query[prop] }
+        })
         target.contextTypes = {
-            environment: React.PropTypes.string,
             ref: React.PropTypes.instanceOf(Firebase)
         }
-        target.prototype._contructor = target.prototype.constructor
-        target.prototype.contructor = function(props, context) {
-            if (typeof target._contructor === 'function') target.prototype._contructor(arguments)
-            this.state = { yolo : [] }
-        } 
         target.prototype._componentDidMount = target.prototype.componentDidMount
         target.prototype.componentDidMount = function() {
             this.ref = this.context.ref
-            this.listeners = Object.keys(query).map((prop) => {
-                let path = query[prop]
-                let handler = (data) => {
-                    this.setState({ yolo : this.state.yolo.concat(data) })
-                }
-                addListener(path, handler, this.ref)
-                return {
-                    path : path,
-                    prop : prop,
-                    handler : handler 
-                }
-                this.setState({ yolo : [] })
-            })
+            addComponent(this, queries)
             if (typeof this._componentDidMount === 'function') this._componentDidMount(arguments)
         }
         target.prototype._componentWillUnmount = target.prototype.componentWillUnmount
         target.prototype.componentWillUnmount = function() {
-            console.log('Im unmounted')
+            delComponent(this)
             if (typeof this._componentWillUnmount === 'function') this._componentWillUnmount(arguments)
         }
     }
@@ -68,12 +76,10 @@ export function FireProps(query) {
 export function FireStarter(url) {
     return (target) => {
         target.childContextTypes = { 
-          environment: React.PropTypes.string,
           ref: React.PropTypes.instanceOf(Firebase)
         }
         target.prototype.getChildContext = function() {
             return {
-                environment: "grandma's house",
                 ref : new Firebase(url)
             }
         }
