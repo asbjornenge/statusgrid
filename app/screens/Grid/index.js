@@ -3,17 +3,17 @@ import FluxComponent from 'flummox/component'
 import Header        from 'shared/components/Header'
 import { FireProps } from 'fireflux'
 
-@FireProps({ items : '/items' })
+@FireProps({ events : '/events' })
 export default class Grid extends React.Component {
     render() {
+        console.log(this.props, this.state)
         return (
             <div className="GridScreen">
                 <div>This is the grid screen</div>
-                <button>Add</button>
             </div>
         )
     }
-    doThing() {
-        this.ref.child('/items/abc').set({})
+    componentDidMount() {
+
     }
 }
