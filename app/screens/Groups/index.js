@@ -48,7 +48,7 @@ export default class Groups extends React.Component {
             return takenGroups.indexOf(g) < 0
         })
 
-        console.log(takenGroups, allGroups, availableGroups)
+//        console.log(takenGroups, allGroups, availableGroups)
 
         // <Form> Available groups
 

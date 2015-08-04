@@ -1,51 +1,77 @@
-import React         from 'react'
-import FluxComponent from 'flummox/component'
-import Header        from 'shared/components/Header'
-import GridItems     from './components/GridItems'
+import React             from 'react'
+import moment            from 'moment'
+import t                 from 'tcomb-form'
+import Header            from 'shared/components/Header'
+import { FireComponent } from 'fireflux'
 
-export default class GridItemsFlux extends React.Component {
+let Form = t.form.Form
+let Units = t.enums({
+    second: 'Second',
+    minute: 'Minute',
+    hour  : 'Hour'
+})
+let GroupForm = t.struct({
+    diff   : t.Num,
+    unit   : Units
+})
+
+@FireComponent({ groups : '/groups', events : '/events' })
+export default class GridItemsScreen extends React.Component {
     render() {
-        return (
-            <FluxComponent connectToStores={['grid']}>
-                <GridItemsScreen grid={this.props.id} />
-            </FluxComponent>
-        )
-    }
-}
+        let group
+        if (!this.state || !this.state.groups || !this.state.events) group = <div>Loading group...</div>
+        else {
+            group = Object.keys(this.state.groups).reduce((group, fid) => {
+                if (group) return group
+                let g = this.state.groups[fid]
+                g.fid = fid
+                if (g.id == this.props.id) return g
+            }, null)
 
-class GridItemsScreen extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            adding : false
+            if (!group) group = <div>No such group</div>
+            else {
+                let groupEvents = Object.keys(this.state.events || {})
+                    .filter((fid) => {
+                        let e = this.state.events[fid]
+                        return e.id == group.id 
+                    })
+                    .map((fid) => {
+                        let e = this.state.events[fid] 
+                        e.fid = fid
+                        return e
+                    })
+                    .map((e) => {
+                        return <div key={e.fid}>{e.res} - {moment(e.timestamp).format('YYYY-MM-DD hh:mm')}</div>
+                    })
+
+                group = (
+                    <div className="Group">
+                        <h1>{group.id}</h1>
+                        <Form ref="form" type={GroupForm} value={group} />
+                        <div className="buttons">
+                            <button onClick={this.onSave.bind(this, group.fid)}>Save</button>
+                            <button onClick={this.onRemove.bind(this, group.fid)}>Remove</button>
+                        </div>
+                        <div className="events">
+                            {groupEvents}
+                        </div>
+                    </div>
+                )
+            }
         }
-    }
-    render() {
-        let grid = this.props.grids.reduce((_grid, cgrid) => {
-            if (cgrid.get('meta').get('id') == this.props.grid) return cgrid
-            return _grid
-        }, null)
-        if (!grid) return (<div>No such grid</div>)
         return (
-            <div className="GridItemsScreen">
+            <div className="GroupScreen">
                 <Header />
-                <div className="addButton">
-                    <button onClick={this.onAddClick.bind(this)}>+</button>
-                </div>
-                <GridItems 
-                    grid={grid} 
-                    gridId={this.props.grid} 
-                    adding={this.state.adding} 
-                    onAddCancel={this.onAddCancel.bind(this)} />
+                {group}
             </div>
         )
     }
-    onAddClick() {
-        if (this.state.adding) return
-        this.setState({ adding : true })
+    onSave(fid) {
+        let value = this.refs.form.getValue()
+        if (!value) return
+        this.ref.child('/groups/'+fid).update(value)
     }
-    onAddCancel() {
-        if (!this.state.adding) return
-        this.setState({ adding : false })
+    onRemove(fid) {
+        this.ref.child('/groups/'+fid).remove()
     }
 }
