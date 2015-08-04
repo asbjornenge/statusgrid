@@ -16,7 +16,7 @@ export default class Groups extends React.Component {
         let groups = [];
         if (!this.state.adding && !this.state.groups) 
             groups.push(
-                <div>No groups found...</div>
+                <div key="nada">No groups found...</div>
             )
         if (this.state.adding) groups.unshift(
            <Group key="adding"

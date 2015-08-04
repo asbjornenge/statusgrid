@@ -4,14 +4,21 @@ import FluxComponent from 'flummox/component'
 import Header        from 'shared/components/Header'
 import nav           from 'shared/utils/nav'
 
+var Units = t.enums({
+    second: 'Second',
+    minute: 'Minute',
+    hour  : 'Hour'
+});
+
 let Form = t.form.Form
-let GridItemForm = t.struct({
+let GroupForm = t.struct({
     name   : t.Str,
-    url    : t.Str,
-    secret : t.Str 
+    diff   : t.Num,
+    unit   : Units
 })
 
-export default class GridItem extends React.Component {
+
+export default class Group extends React.Component {
     render() {
         let value = this.props.group || {}
         let middleButton = this.props.group ?
@@ -19,7 +26,7 @@ export default class GridItem extends React.Component {
             <button onClick={this.onCancel.bind(this)}>Cancel</button>
         return (
             <div className="Group">
-                <Form ref="form" type={GridItemForm} value={value} />
+                <Form ref="form" type={GroupForm} value={value} />
                 <div className="buttons">
                     <button onClick={this.onSave.bind(this)}>Save</button>
                     {middleButton}
@@ -32,15 +39,19 @@ export default class GridItem extends React.Component {
         let values = this.refs.form.getValue()
         if (!values) return
         this.props.onAddCancel()
-        if (!this.props.grid) return this.props.onAddSave(values)
-//        this.props.flux.getActions('grid').update(this.props.grid.get('meta').merge(values))
+        if (!this.props.group) {
+            // Adding
+            console.log('adding', this.props)
+        } else {
+            // Updating
+        }
     }
     onCancel() {
         if (!this.props.grid) return this.props.onAddCancel()
     }
     onRemove() {
         if (!this.props.grid) return this.props.onAddCancel()
-//        this.props.flux.getActions('grid').remove(this.props.grid)
+        // Removing
     }
     onEdit() {
         nav.navigate('/grid/'+this.props.group.id)
