@@ -3,9 +3,9 @@ import Router          from 'tiny-react-router'
 import { FireStarter } from 'fireflux' 
 
 let routes = {
-    '/'         : require('./screens/Grid'),
-    '/grids'    : require('./screens/Grids'), 
-    '/grid/:id' : require('./screens/GridItems') 
+    '/'           : require('./screens/Grid'),
+    '/groups'     : require('./screens/Groups'), 
+    '/groups/:id' : require('./screens/Group') 
 }
 
 @FireStarter('https://taghub-statusgrid.firebaseio.com/')

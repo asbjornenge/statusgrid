@@ -1,9 +1,9 @@
-import React         from 'react'
-import Header        from 'shared/components/Header'
-import { FireProps } from 'fireflux'
-import EventGroup    from './components/EventGroup'
+import React            from 'react'
+import { FireComponent} from 'fireflux'
+import Header           from 'shared/components/Header'
+import EventGroup       from './components/EventGroup'
 
-@FireProps({ events : '/events' })
+@FireComponent({ events : '/events' })
 export default class Grid extends React.Component {
     render() {
         if (!this.state) return (

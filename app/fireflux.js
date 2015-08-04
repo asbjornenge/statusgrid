@@ -51,7 +51,7 @@ function delComponent(comp) {
     })
 }
 
-export function FireProps(query) { 
+export function FireComponent(query) { 
     return (target) => {
         let queries = Object.keys(query).map((prop) => { 
             return { prop : prop, path : query[prop] }

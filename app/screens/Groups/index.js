@@ -1,8 +1,10 @@
-import React from 'react'
-import Header from 'shared/components/Header'
-import GridsList from './components/GridsList'
+import React             from 'react'
+import { FireComponent } from 'fireflux'
+import Header            from 'shared/components/Header'
+import GridsList         from './components/GridsList'
 
-export default class GridsFlux extends React.Component {
+@FireComponent({ groups : '/groups' })
+export default class Groups extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -10,15 +12,13 @@ export default class GridsFlux extends React.Component {
         }
     }
     render() {
+        console.log(this.state)
         return (
-            <div className="GridsScreen">
+            <div className="GroupsScreen">
                 <Header />
                 <div className="addButton">
                     <button onClick={this.onAddClick.bind(this)}>+</button>
                 </div>
-                <GridsList 
-                    adding={this.state.adding} 
-                    onAddCancel={this.onAddCancel.bind(this)}/>
             </div>
         )
     }
