@@ -65,7 +65,7 @@ export default class Groups extends React.Component {
 
         takenGroups.forEach((g) => {
             groups.push(
-                <div className="Group">
+                <div className="Group" key={g}>
                     <h1>{g}</h1>
                     <button onClick={this.viewGroup.bind(this,g)}>View</button>
                 </div>
