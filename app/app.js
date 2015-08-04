@@ -1,6 +1,7 @@
 import React           from 'react'
 import Router          from 'tiny-react-router'
 import { FireStarter } from 'fireflux' 
+import Settings        from './screens/Settings'
 
 let routes = {
     '/'           : require('./screens/Grid'),
@@ -12,8 +13,7 @@ let routes = {
 
 let firebase = JSON.parse(localStorage.getItem('statusgrid-settings') || '{"url":""}')
 
-import Settings from './screens/Settings'
-@FireStarter(firebase.url)
+@FireStarter(firebase)
 class RealApp extends React.Component {
     render() {
         return (
@@ -23,5 +23,4 @@ class RealApp extends React.Component {
 }
 
 let App = firebase.url != "" ? RealApp : Settings
-
 React.render(<App />, document.body)

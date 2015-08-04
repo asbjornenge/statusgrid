@@ -1,8 +1,5 @@
-import React from 'react'
-import Immutable from 'immutable'
-import assign from 'object.assign'
-import uuid from 'node-uuid'
-import Firebase from 'firebase/lib/firebase-web'
+import React     from 'react'
+import Firebase  from 'firebase/lib/firebase-web'
 
 let fireStore = {}
 
@@ -73,14 +70,21 @@ export function FireComponent(query) {
     }
 }
 
-export function FireStarter(url) {
+export function FireStarter(firebase) {
+    if (typeof firebase === 'string') firebase = { url : firebase }
+    let ref = new Firebase(firebase.url)
+    if (firebase.secret) {
+        ref.authWithCustomToken(firebase.secret, (err, authData) => {
+            if (err) throw err
+        })
+    }
     return (target) => {
         target.childContextTypes = { 
           ref: React.PropTypes.instanceOf(Firebase)
         }
         target.prototype.getChildContext = function() {
             return {
-                ref : new Firebase(url)
+                ref : ref 
             }
         }
     }
