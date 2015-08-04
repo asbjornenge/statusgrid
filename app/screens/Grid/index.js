@@ -3,7 +3,7 @@ import { FireComponent} from 'fireflux'
 import Header           from 'shared/components/Header'
 import EventGroup       from './components/EventGroup'
 
-@FireComponent({ events : '/events' })
+@FireComponent({ events : '/events', groups : '/groups' })
 export default class Grid extends React.Component {
     render() {
         if (!this.state) return (
@@ -27,7 +27,10 @@ export default class Grid extends React.Component {
         groups = Object.keys(groups)
             .map((id) => {
                 let group = groups[id]
-                return <EventGroup group={group} key={group.id} />
+                return <EventGroup 
+                            key={group.id}
+                            group={group} 
+                            groups={this.state.groups} />
             })
         return (
             <div className="GridScreen">
