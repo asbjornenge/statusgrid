@@ -7,6 +7,7 @@ export default class HeaderMenu extends React.Component {
             <div className="HeaderMenu">
                 <button onClick={this.navigate.bind(this, '')}>Grid</button>
                 <button onClick={this.navigate.bind(this, 'groups')}>Groups</button>
+                <button onClick={this.navigate.bind(this, 'settings')}>Settings</button>
             </div>
         )
     }
