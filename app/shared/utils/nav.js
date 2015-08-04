@@ -1,8 +1,8 @@
-export default class NavigationActions {
-    getCurrentRoute() {
+export default {
+    getCurrentRoute : function() {
         return window.location.hash.slice(1)
-    }
-    navigate(path) {
+    },
+    navigate : function(path) {
         window.location.hash = '#'+path
     }
 }
