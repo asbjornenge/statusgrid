@@ -15,10 +15,11 @@
     "build": "concurrent -p command 'npm run build-js' 'npm run build-style'",
     "build-js": "browserify app/app.js -t babelify -t [ resolvify app ] -t imgurify -t [stylusify --inline-images] -o build/app.js",
     "build-style": "stylus app/app.styl -o build",
-    "bundle": "npm run bundle-copy & npm run bundle-js & npm run bundle-style",
+    "bundle": "npm run bundle-copy && npm run bundle-js && npm run bundle-style",
     "bundle-js": "uglifyjs --compress --screw-ie8 build/app.js -o dist/app.js",
     "bundle-style": "cssnano build/app.css dist/app.css",
-    "bundle-copy": "cp app/index.html dist/index.html"
+    "bundle-copy": "cp app/index.html dist/index.html",
+    "deploy": "gh-pages -d dist"
   },
   "directories": {
     "test": "test"
