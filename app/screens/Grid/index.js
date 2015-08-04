@@ -1,19 +1,40 @@
 import React         from 'react'
-import FluxComponent from 'flummox/component'
 import Header        from 'shared/components/Header'
 import { FireProps } from 'fireflux'
+import EventGroup    from './components/EventGroup'
 
 @FireProps({ events : '/events' })
 export default class Grid extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = { events : [] }
-    }
     render() {
-        console.log('rendering events', this.state.events)
+        if (!this.state) return (
+            <div>Loading...</div>
+        )
+        if (!this.state.events) return (
+            <div>No events found...</div>
+        )
+        let events = Object.keys(this.state.events).map((id) => {
+            return this.state.events[id]
+        })
+        let groups = events
+            .reduce((groups, e) => {
+                if (!groups[e.id]) groups[e.id] = {
+                    id : e.id,
+                    events : []
+                }
+                groups[e.id].events.push(e)
+                return groups
+            }, {})
+        groups = Object.keys(groups)
+            .map((id) => {
+                let group = groups[id]
+                return <EventGroup group={group} key={group.id} />
+            })
         return (
             <div className="GridScreen">
-                <div>This is the grid screen</div>
+                <Header />
+                <div className="groups">
+                    {groups}
+                </div>
             </div>
         )
     }
