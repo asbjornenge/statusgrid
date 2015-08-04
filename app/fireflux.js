@@ -72,7 +72,7 @@ export function FireComponent(query) {
 
 export function FireStarter(firebase) {
     if (typeof firebase === 'string') firebase = { url : firebase }
-    let ref = new Firebase(firebase.url)
+    let ref = firebase.url ? new Firebase(firebase.url) : {}
     if (firebase.secret) {
         ref.authWithCustomToken(firebase.secret, (err, authData) => {
             if (err) throw err

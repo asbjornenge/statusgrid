@@ -11,7 +11,7 @@ let routes = {
 }
 
 
-let firebase = JSON.parse(localStorage.getItem('statusgrid-settings') || '{"url":""}')
+let firebase = JSON.parse(localStorage.getItem('statusgrid-settings') || '{}')
 
 @FireStarter(firebase)
 class RealApp extends React.Component {
@@ -22,5 +22,5 @@ class RealApp extends React.Component {
     }
 }
 
-let App = firebase.url != "" ? RealApp : Settings
+let App = firebase.url ? RealApp : Settings
 React.render(<App />, document.body)
