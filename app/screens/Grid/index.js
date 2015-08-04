@@ -1,24 +1,43 @@
-import React         from 'react'
-import FluxComponent from 'flummox/component'
-import Header        from 'shared/components/Header'
-import GridView      from './components/GridView'
+import React            from 'react'
+import { FireComponent} from 'fireflux'
+import Header           from 'shared/components/Header'
+import EventGroup       from './components/EventGroup'
 
-export default class GridFlux extends React.Component {
+@FireComponent({ events : '/events', groups : '/groups' })
+export default class Grid extends React.Component {
     render() {
-        return (
-            <FluxComponent connectToStores={['grid']}>
-                <Grid />
-            </FluxComponent>
+        if (!this.state) return (
+            <div>Loading...</div>
         )
-    }
-}
-
-class Grid extends React.Component {
-    render() {
+        if (!this.state.events) return (
+            <div>No events found...</div>
+        )
+        let events = Object.keys(this.state.events).map((id) => {
+            return this.state.events[id]
+        })
+        let groups = events
+            .reduce((groups, e) => {
+                if (!groups[e.id]) groups[e.id] = {
+                    id : e.id,
+                    events : []
+                }
+                groups[e.id].events.push(e)
+                return groups
+            }, {})
+        groups = Object.keys(groups)
+            .map((id) => {
+                let group = groups[id]
+                return <EventGroup 
+                            key={group.id}
+                            group={group} 
+                            groups={this.state.groups} />
+            })
         return (
             <div className="GridScreen">
                 <Header />
-                <GridView {...this.props} />
+                <div className="groups">
+                    {groups}
+                </div>
             </div>
         )
     }

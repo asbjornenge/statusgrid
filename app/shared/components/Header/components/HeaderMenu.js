@@ -1,26 +1,17 @@
 import React from 'react'
-import FluxComponent from 'flummox/component'
+import nav   from 'shared/utils/nav'
 
-export default class HeaderMenuFlux extends React.Component {
-    render() {
-        return (
-            <FluxComponent>
-                <HeaderMenu />
-            </FluxComponent>
-        )
-    }
-    
-}
-class HeaderMenu extends React.Component {
+export default class HeaderMenu extends React.Component {
     render() {
         return (
             <div className="HeaderMenu">
                 <button onClick={this.navigate.bind(this, '')}>Grid</button>
-                <button onClick={this.navigate.bind(this, 'grids')}>Grids</button>
+                <button onClick={this.navigate.bind(this, 'groups')}>Groups</button>
+                <button onClick={this.navigate.bind(this, 'settings')}>Settings</button>
             </div>
         )
     }
     navigate(path) {
-        this.props.flux.getUtils('nav').navigate('/'+path)
+        nav.navigate('/'+path)
     }
 }

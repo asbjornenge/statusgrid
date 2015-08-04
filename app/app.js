@@ -1,18 +1,26 @@
-import React         from 'react'
-import Router        from 'tiny-react-router'
-import FluxComponent from 'flummox/component'
-import Flux          from './flux'
-
-let flux = new Flux()
+import React           from 'react'
+import Router          from 'tiny-react-router'
+import { FireStarter } from 'fireflux' 
+import Settings        from './screens/Settings'
 
 let routes = {
-    '/'         : require('./screens/Grid'),
-    '/grids'    : require('./screens/Grids'), 
-    '/grid/:id' : require('./screens/GridItems') 
+    '/'           : require('./screens/Grid'),
+    '/groups'     : require('./screens/Groups'), 
+    '/groups/:id' : require('./screens/Group'), 
+    '/settings'   : require('./screens/Settings') 
 }
 
-React.render(
-    <FluxComponent flux={flux}>
-        <Router routes={routes} />
-    </FluxComponent>
-, document.body)
+
+let firebase = JSON.parse(localStorage.getItem('statusgrid-settings') || '{"url":""}')
+
+@FireStarter(firebase)
+class RealApp extends React.Component {
+    render() {
+        return (
+            <Router routes={routes} />
+        ) 
+    }
+}
+
+let App = firebase.url != "" ? RealApp : Settings
+React.render(<App />, document.body)
