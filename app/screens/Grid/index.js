@@ -5,7 +5,12 @@ import EventGroup       from './components/EventGroup'
 
 @FireComponent({ events : '/events', groups : '/groups' })
 export default class Grid extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = { counter : 0 }
+    }
     render() {
+        console.log('renderinging grid')
         if (!this.state) return (
             <div>Loading...</div>
         )
@@ -40,5 +45,11 @@ export default class Grid extends React.Component {
                 </div>
             </div>
         )
+    }
+    componentDidMount() {
+        this.renderInterval = setInterval(() => { this.setState({ counter : this.state.counter += 1 }) },10000)
+    }
+    componentWillUnmount() {
+        clearInterval(this.renderInterval)
     }
 }
