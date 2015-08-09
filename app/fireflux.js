@@ -9,6 +9,17 @@ function getChildPath(ref, path) {
     return getChildPath(ref.child(_path), path)
 }
 
+function pickPathFunc(path) {
+    let funcList = []
+    let pathAndFunc = path.split('|')
+    if (pathAndFunc.length > 1) {
+        // We have som func!
+        funcList = pathAndFunc.slice(1) 
+    }
+    path = pathAndFunc[0].split('/').slice(1)
+    return { path : path, func : funcList }
+}
+
 function pushState(comp, state) {
     let s = {}
     s[comp.prop] = state
@@ -26,7 +37,15 @@ function addComponent(comp, queries) {
                 components : [_comp]
             }
             // add listeners
-            let child = getChildPath(comp.ref, q.path.split('/').slice(1))
+            let { path, func } = pickPathFunc(q.path)
+            let child = getChildPath(comp.ref, path)
+            func.forEach((f) => {
+                let fa = f.split(':')
+                if (fa.length > 1)
+                    child = child[fa[0]](eval(fa[1]))
+                else
+                    child = child[fa[0]]()
+            })
             fireStore[q.path].handler = function(snap) {
                 fireStore[q.path].state = snap.val()
                 fireStore[q.path].components.forEach((c) => pushState(c, snap.val()))
