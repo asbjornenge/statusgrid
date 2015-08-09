@@ -40,6 +40,13 @@ export default class GridItemsScreen extends React.Component {
                         e.fid = fid
                         return e
                     })
+                    .sort((a,b) => {
+                        if (a.timestamp > b.timestamp) 
+                            return -1
+                        if (a.timestamp < b.timestamp)
+                            return 1
+                        return 0
+                    })
                     .map((e) => {
                         return <div key={e.fid}>{e.res} - {moment(e.timestamp).format('YYYY-MM-DD hh:mm')}</div>
                     })
