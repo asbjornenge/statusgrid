@@ -3,7 +3,7 @@ import { FireComponent} from 'fireflux'
 import Header           from 'shared/components/Header'
 import EventGroup       from './components/EventGroup'
 
-@FireComponent({ events : '/events', groups : '/groups' })
+@FireComponent({ events : '/events|limitToLast:100', groups : '/groups' })
 export default class Grid extends React.Component {
     constructor(props) {
         super(props)

@@ -15,7 +15,7 @@ let GroupForm = t.struct({
     unit   : Units
 })
 
-@FireComponent({ groups : '/groups', events : '/events' })
+@FireComponent({ groups : '/groups', events : '/events|limitToLast:100' })
 export default class GridItemsScreen extends React.Component {
     render() {
         let group

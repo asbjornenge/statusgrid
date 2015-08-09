@@ -6,7 +6,7 @@ import nav               from 'shared/utils/nav'
 
 let Form = t.form.Form
 
-@FireComponent({ groups : '/groups', events : '/events' })
+@FireComponent({ groups : '/groups', events : '/events|limitToLast:100' })
 export default class Groups extends React.Component {
     constructor(props) {
         super(props)
